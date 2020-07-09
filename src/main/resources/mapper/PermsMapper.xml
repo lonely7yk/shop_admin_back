@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lonely7yk.mapper.PermsMapper">
+    <select id="getAllPermsIds" resultType="_int">
+        select ps_id
+        from vue_shop.sp_permission;
+    </select>
+
+    <resultMap id="MenuMapper" type="perms">
+        <result property="id" column="id"/>
+        <result property="authName" column="authName"/>
+        <result property="path" column="path"/>
+        <result property="order" column="order_"/>
+        <collection property="children" ofType="perms" column="id" select="selectMenuChildren"/>
+    </resultMap>
+
+    <select id="getMenuPerms" resultMap="MenuMapper">
+        select perms.ps_id as id, perms.ps_name as authName, api.ps_api_path as path, api.ps_api_order as order_
+        from vue_shop.sp_permission perms
+                 left join vue_shop.sp_permission_api api on perms.ps_id = api.ps_id
+        where perms.ps_level = '0'
+    </select>
+
+    <select id="selectMenuChildren" resultMap="MenuMapper">
+        select perms.ps_id as id, perms.ps_name as authName, api.ps_api_path as path, api.ps_api_order as order_
+        from vue_shop.sp_permission perms
+                 left join vue_shop.sp_permission_api api on perms.ps_id = api.ps_id
+        where perms.ps_level = '1' and perms.ps_pid=#{id}
+    </select>
+
+    <resultMap id="PermsMapper" type="perms">
+        <result property="id" column="id"/>
+        <result property="authName" column="authName"/>
+        <collection property="children" ofType="perms" column="id" select="selectPermsChildren"/>
+    </resultMap>
+
+    <select id="getAllPerms" resultMap="PermsMapper">
+        select ps_id as id, ps_name as authName
+        from vue_shop.sp_permission
+        where ps_level = '0';
+    </select>
+
+    <select id="selectPermsChildren" resultMap="PermsMapper">
+        select ps_id as id, ps_name as authName
+        from vue_shop.sp_permission
+        where ps_pid = #{id}
+    </select>
+</mapper>

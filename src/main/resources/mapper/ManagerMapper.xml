@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lonely7yk.mapper.ManagerMapper">
+
+    <resultMap id="ManagerMap" type="manager">
+        <result property="mgId" column="mg_id"/>
+        <result property="mgName" column="mg_name"/>
+        <result property="mgPwd" column="mg_pwd"/>
+        <result property="mgTime" column="mg_time"/>
+        <result property="mgMobile" column="mg_mobile"/>
+        <result property="mgEmail" column="mg_email"/>
+        <result property="mgState" column="mg_state"/>
+
+        <association property="role" javaType="role">
+            <result property="roleId" column="role_id"/>
+            <result property="roleName" column="role_name"/>
+            <result property="permsIds" column="ps_ids"/>
+            <result property="permsCate" column="ps_ca"/>
+            <result property="roleDesc" column="role_desc"/>
+        </association>
+    </resultMap>
+
+    <select id="queryManagerByName" parameterType="string" resultMap="ManagerMap">
+        select *
+        from vue_shop.sp_manager
+        where mg_name = #{name};
+    </select>
+
+    <select id="queryManagersByQueryInfo" parameterType="map" resultMap="ManagerMap">
+        select manager.mg_id as mg_id,
+        manager.mg_name as mg_name,
+        manager.mg_mobile as mg_mobile,
+        manager.mg_email as mg_email,
+        manager.mg_time as mg_time,
+        manager.mg_state as mg_state,
+        manager.role_id as role_id,
+        role.role_name as role_name
+        from vue_shop.sp_manager manager
+        left join vue_shop.sp_role role on manager.role_id = role.role_id
+        <where>
+            <if test="query != null">
+                manager.mg_name like #{query}
+            </if>
+        </where>
+        limit #{startIdx}, #{pageSize};
+    </select>
+
+    <select id="countManagers" resultType="int">
+        select COUNT(*)
+        from vue_shop.sp_manager;
+    </select>
+
+    <insert id="addManager" parameterType="manager">
+        insert into vue_shop.sp_manager (mg_name, mg_pwd, mg_mobile, mg_email, mg_time)
+        values (#{mgName}, #{mgPwd}, #{mgMobile}, #{mgEmail}, #{mgTime});
+    </insert>
+
+    <update id="updateManagerType">
+        update vue_shop.sp_manager
+        set mg_state = #{state}
+        where mg_id = #{id};
+    </update>
+
+    <select id="queryManagerById" resultMap="ManagerMap">
+        select *
+        from vue_shop.sp_manager
+        where mg_id = #{id};
+    </select>
+
+    <update id="updateManager" parameterType="manager">
+        update vue_shop.sp_manager
+        set mg_email  = #{mgEmail},
+            mg_mobile = #{mgMobile}
+        where mg_id = #{mgId};
+    </update>
+
+    <delete id="deleteManager">
+        delete
+        from vue_shop.sp_manager
+        where mg_id = #{id};
+    </delete>
+
+    <update id="updateManagerRole">
+        update vue_shop.sp_manager
+        set role_id = #{rid}
+        where mg_id = #{id};
+    </update>
+</mapper>

@@ -1,0 +1,56 @@
+spring:
+  datasource:
+    # jdbc 配置
+    username: root
+    password: sfy13382521323
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/vue_shop?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+
+    # druid 配置
+    druid:
+      initial-size: 5   # 初始化时建立物理连接的个数
+      min-idle: 5       # 最小连接池数量
+      max-active: 20    # 最大连接池数量
+      max-wait: 60000   # 获取连接时最大等待时间，单位毫秒
+      time-between-eviction-runs-millis: 60000  # 配置检测可以关闭的空闲连接间隔时间
+      min-evictable-idle-time-millis: 300000    # 配置连接在池中的最小生存时间
+      # 用来检测连接是否有效的sql,要求是一个查询语句。如果结果为 null,
+      # testOnBorrow, testonReturn, testWhileldle都不会其作用
+      validation-query: SELECT 1 FROM DUAL
+      # 建议配置为true,不影响性能,并且保证安全性。申请连接的时候检测,如果空闲时间大于
+      # time-between-eviction-runs-millis,执行validation-query检测连接是否有效
+      test-while-idle: true
+      # 申请连接时执行validation-query检测连接是否有效,做了这个配置会降低性能。
+      test-on-borrow: false
+      # 归还连接时执行validation-query检测连接是否有效,做了这个配置会降低性能。
+      test-on-return: false
+      # 是否缓存preparedStatement，也就是PSCache,PSCache对支持游标的数据库性能提升巨大，比如说oracle,
+      # 在mysql下建议关闭。
+      pool-prepared-statements: false
+      # 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。
+      # 在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
+      max-pool-prepared-statement-per-connection-size: -1
+      # 配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
+      # 如果允许时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
+      # 则导入 log4j 依赖即可，Maven 地址：https://mvnrepository.com/artifact/log4j/log4j
+      filters: stat,wall,log4j
+      use-global-data-source-stat: true
+      #connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+      # StatViewServlet配置（后台监控）
+      stat-view-servlet:
+        # 是否启用StatViewServlet（监控页面）默认值为false（考虑到安全问题默认并未启动，
+        # 如需启用建议设置密码或白名单以保障安全）
+        enabled: true
+        url-pattern: /druid/*   # 后台访问路径
+        reset-enable: true      # 是否能重置数据
+        login-username: druid   # 登录账号
+        login-password: 123456  # 登录密码
+        allow: 127.0.0.1        # 白名单（如果不配置就是都可以访问）
+        deny:                   # 黑名单（优先级高于白名单）
+
+      # web stat 过滤器
+      web-stat-filter:
+        enabled: true   # 是否启用StatFilter默认值false
+        url-pattern: /* # 表示过滤所有请求
+        exclusions: /druid/*,/jdbc/*  # 设置哪些请求进行过滤排除掉，从而不进行统计
