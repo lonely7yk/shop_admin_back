@@ -11,11 +11,36 @@
     </resultMap>
 
     <select id="getRoleById" parameterType="_int" resultMap="RoleMap">
-        select * from vue_shop.sp_role where role_id=#{id};
+        select *
+        from vue_shop.sp_role
+        where role_id = #{id};
     </select>
 
     <select id="getAllRoles" resultMap="RoleMap">
-        select * from vue_shop.sp_role;
+        select *
+        from vue_shop.sp_role;
     </select>
 
+    <insert id="addRole" parameterType="role">
+        insert into vue_shop.sp_role (role_name, role_desc) value (#{roleName}, #{roleDesc});
+    </insert>
+
+    <update id="updateRole" parameterType="role">
+        update vue_shop.sp_role
+        set role_name = #{roleName},
+            role_desc = #{roleDesc}
+        where role_id = #{roleId};
+    </update>
+
+    <delete id="deleteRole" parameterType="_int">
+        delete
+        from vue_shop.sp_role
+        where role_id = #{id};
+    </delete>
+
+    <update id="updateRolePerms" parameterType="role">
+        update vue_shop.sp_role
+        set ps_ids = #{permsIds}
+        where role_id = #{roleId};
+    </update>
 </mapper>

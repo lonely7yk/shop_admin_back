@@ -9,7 +9,15 @@ import java.util.List;
 @Mapper
 @Repository
 public interface RoleMapper {
-	public Role getRoleById(int id);
+	Role getRoleById(int id);
 
 	List<Role> getAllRoles();
+
+	int addRole(Role role);
+
+	int updateRole(Role role);
+
+	int deleteRole(int id);
+
+	int updateRolePerms(Role role);
 }

@@ -105,6 +105,12 @@ public class ManagerController {
 		return MapUtils.generateMap(null, "用户创建成功", 201);
 	}
 
+	/**
+	 * 更新用户类型
+	 * @param uid 用户 id
+	 * @param type 状态 true 或 false
+	 * @return
+	 */
 	@PutMapping("/users/{uid}/state/{type}")
 	public Map<String, Object> updateUserType(@PathVariable int uid, @PathVariable boolean type) {
 		int res = managerService.updateManagerType(uid, type);
@@ -115,6 +121,11 @@ public class ManagerController {
 		return MapUtils.generateMap(null, "设置状态成功", 200);
 	}
 
+	/**
+	 * 获取单个用户
+	 * @param id 用户 id
+	 * @return
+	 */
 	@GetMapping("/users/{id}")
 	public Map<String, Object> getUser(@PathVariable int id) {
 		Manager manager = managerService.queryManagerById(id);
@@ -131,6 +142,12 @@ public class ManagerController {
 		return MapUtils.generateMap(data, "查询成功", 200);
 	}
 
+	/**
+	 * 更新用户
+	 * @param id 用户 id
+	 * @param userMap 用户数据
+	 * @return
+	 */
 	@PutMapping("/users/{id}")
 	public Map<String, Object> updateUser(@PathVariable int id, @RequestBody Map<String, Object> userMap) {
 		Manager manager = new Manager();
@@ -146,6 +163,11 @@ public class ManagerController {
 		return MapUtils.generateMap(null, "更新成功", 200);
 	}
 
+	/**
+	 * 删除用户
+	 * @param id 用户 id
+	 * @return
+	 */
 	@DeleteMapping("/users/{id}")
 	public Map<String, Object> deleteUser(@PathVariable int id) {
 		int res = managerService.deleteManager(id);
@@ -156,6 +178,12 @@ public class ManagerController {
 		return MapUtils.generateMap(null, "删除成功", 200);
 	}
 
+	/**
+	 * 分配用户角色
+	 * @param id 用户 id
+	 * @param ridMap 存储角色 id
+	 * @return
+	 */
 	@PutMapping("/users/{id}/role")
 	public Map<String, Object> assignUserRole(@PathVariable int id, @RequestBody Map<String, Object> ridMap) {
 		int res = managerService.updateManagerRole(id, (Integer) ridMap.get("rid"));

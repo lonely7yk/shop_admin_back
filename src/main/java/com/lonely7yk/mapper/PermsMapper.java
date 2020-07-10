@@ -5,13 +5,18 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
 public interface PermsMapper {
-	public List<Integer> getAllPermsIds();
+	List<Integer> getAllPermsIds();
 
-	public List<Perms> getMenuPerms();
+	List<Perms> getMenuPerms();
 
-	public List<Perms> getAllPerms();
+	List<Perms> getAllPermsTree();
+
+	List<Map<String, Object>> getAllPermsList();
+
+	List<Integer> getChildrenPermsIds(int parentRoleId);
 }

@@ -28,7 +28,8 @@
         select perms.ps_id as id, perms.ps_name as authName, api.ps_api_path as path, api.ps_api_order as order_
         from vue_shop.sp_permission perms
                  left join vue_shop.sp_permission_api api on perms.ps_id = api.ps_id
-        where perms.ps_level = '1' and perms.ps_pid=#{id}
+        where perms.ps_level = '1'
+          and perms.ps_pid = #{id}
     </select>
 
     <resultMap id="PermsMapper" type="perms">
@@ -37,7 +38,7 @@
         <collection property="children" ofType="perms" column="id" select="selectPermsChildren"/>
     </resultMap>
 
-    <select id="getAllPerms" resultMap="PermsMapper">
+    <select id="getAllPermsTree" resultMap="PermsMapper">
         select ps_id as id, ps_name as authName
         from vue_shop.sp_permission
         where ps_level = '0';
@@ -47,5 +48,16 @@
         select ps_id as id, ps_name as authName
         from vue_shop.sp_permission
         where ps_pid = #{id}
+    </select>
+
+    <select id="getAllPermsList" resultType="map">
+        select perms.ps_id as id, perms.ps_name as authName, perms.ps_level as level, perms.ps_pid as pid
+        from vue_shop.sp_permission perms;
+    </select>
+
+    <select id="getChildrenPermsIds" resultType="int">
+        select *
+        from vue_shop.sp_permission
+        where ps_pid = #{parentRoleId};
     </select>
 </mapper>

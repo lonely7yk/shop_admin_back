@@ -21,7 +21,7 @@ public class PermsMapperTest {
 
 	@Test
 	public void getAllPerms() throws JsonProcessingException {
-		List<Perms> allPerms = permsMapper.getAllPerms();
+		List<Perms> allPerms = permsMapper.getAllPermsTree();
 		ObjectMapper objectMapper = new ObjectMapper();
 		String s = objectMapper.writeValueAsString(allPerms);
 		System.out.println(s);
